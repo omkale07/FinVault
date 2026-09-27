@@ -22,7 +22,7 @@ const getAllNotifications = async (req, res, next) => {
             0
         );
 
-        const notifications = await getNotifications(
+        const { notifications, unreadCount } = await getNotifications(
             userId,
             limit,
             offset
@@ -30,7 +30,8 @@ const getAllNotifications = async (req, res, next) => {
 
         return res.status(200).json({
             success: true,
-            notifications
+            notifications,
+            unreadCount
         });
 
     } catch (error) {
@@ -60,7 +61,7 @@ const getUnreadNotifications = async (
             0
         );
 
-        const notifications = await getUnread(
+        const { notifications, unreadCount } = await getUnread(
             userId,
             limit,
             offset
@@ -68,7 +69,8 @@ const getUnreadNotifications = async (
 
         return res.status(200).json({
             success: true,
-            notifications
+            notifications,
+            unreadCount
         });
 
     } catch (error) {

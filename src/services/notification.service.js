@@ -1,7 +1,8 @@
 const {
     getUserNotifications,
     getUnreadNotifications,
-    markNotificationAsRead
+    markNotificationAsRead,
+    getUnreadCount
 } = require("../repositories/notification.repository");
 
 
@@ -12,11 +13,12 @@ const getNotifications = async (
     offset = 0
 ) => {
 
-    return await getUserNotifications(
-        userId,
-        limit,
-        offset
-    );
+    const [notifications, unreadCount] = await Promise.all([
+        getUserNotifications(userId, limit, offset),
+        getUnreadCount(userId)
+    ]);
+
+    return { notifications, unreadCount };
 };
 
 
@@ -27,11 +29,12 @@ const getUnread = async (
     offset = 0
 ) => {
 
-    return await getUnreadNotifications(
-        userId,
-        limit,
-        offset
-    );
+    const [notifications, unreadCount] = await Promise.all([
+        getUnreadNotifications(userId, limit, offset),
+        getUnreadCount(userId)
+    ]);
+
+    return { notifications, unreadCount };
 };
 
 
