@@ -1,0 +1,138 @@
+services:
+
+  postgres:
+    image: postgres:18-alpine
+    container_name: finvault-postgres
+    environment:
+      POSTGRES_DB: finvault
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: finvault_password
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./docker/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d finvault"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:alpine
+    container_name: finvault-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: finvault-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    container_name: finvault-api
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: finvault
+      DB_USER: postgres
+      DB_PASSWORD: finvault_password
+      REDIS_URL: redis://redis:6379
+      RABBITMQ_URL: amqp://rabbitmq:5672
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+  outbox-worker:
+    build: .
+    container_name: finvault-outbox-worker
+    command: npm run worker:outbox
+    env_file:
+      - .env
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: finvault
+      DB_USER: postgres
+      DB_PASSWORD: finvault_password
+      REDIS_URL: redis://redis:6379
+      RABBITMQ_URL: amqp://rabbitmq:5672
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+  notification-worker:
+    build: .
+    container_name: finvault-notification-worker
+    command: npm run worker:notifications
+    env_file:
+      - .env
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: finvault
+      DB_USER: postgres
+      DB_PASSWORD: finvault_password
+      REDIS_URL: redis://redis:6379
+      RABBITMQ_URL: amqp://rabbitmq:5672
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+  expiration-worker:
+    build: .
+    container_name: finvault-expiration-worker
+    command: npm run worker:expiration
+    env_file:
+      - .env
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: finvault
+      DB_USER: postgres
+      DB_PASSWORD: finvault_password
+      REDIS_URL: redis://redis:6379
+      RABBITMQ_URL: amqp://rabbitmq:5672
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
