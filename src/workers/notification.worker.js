@@ -339,4 +339,6 @@ const startNotificationWorker = async () => {
 };
 
 
-startNotificationWorker();
+module.exports = {
+    startNotificationWorker
+};

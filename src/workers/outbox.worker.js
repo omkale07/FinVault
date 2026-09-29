@@ -138,4 +138,6 @@ const startOutboxWorker = async () => {
 };
 
 
-startOutboxWorker();
+module.exports = {
+    startOutboxWorker
+};
