@@ -61,13 +61,15 @@ FinVault employs a modular architecture where the main API server handles synchr
 
 ### Prerequisites
 Make sure you have the following installed on your machine:
-- Node.js (v18 or higher)
-- Docker & Docker Compose
+- [Node.js](https://nodejs.org/) (v18 or higher)
+- [Docker & Docker Compose](https://www.docker.com/)
 - Git
 
 ### 1. Clone the repository
+```bash
 git clone https://github.com/omkale07/FinVault.git
 cd FinVault
+```
 
 ### 2. Environment Variables
 Create a `.env` file in the root directory and configure your environment variables. At a minimum, you may need to configure your database credentials and `RESEND_API_KEY` for notifications.
@@ -75,7 +77,9 @@ Create a `.env` file in the root directory and configure your environment variab
 ### 3. Start the Backend Infrastructure (Docker)
 The easiest way to run the backend (Postgres, Redis, RabbitMQ, API, and Workers) is using Docker Compose:
 
+```bash
 docker-compose up -d --build
+```
 
 This will spin up:
 - PostgreSQL database (`5433:5432`)
@@ -87,9 +91,11 @@ This will spin up:
 ### 4. Run the Frontend (Local Development)
 Open a new terminal window, navigate to the client directory, install dependencies, and start the Vite dev server:
 
+```bash
 cd client
 npm install
 npm run dev
+```
 
 The frontend should now be running at `http://localhost:5173` (or similar port provided by Vite).
 
@@ -97,6 +103,7 @@ The frontend should now be running at `http://localhost:5173` (or similar port p
 
 ## 📁 Project Structure
 
+```text
 FinVault/
 ├── client/                 # React frontend application
 │   ├── src/                # Frontend source code
@@ -112,6 +119,7 @@ FinVault/
 ├── docker-compose.yml      # Multi-container orchestration
 ├── Dockerfile              # Backend container build instructions
 └── package.json            # Backend dependencies and scripts
+```
 
 ---
 
@@ -119,11 +127,13 @@ FinVault/
 
 The backend includes a test suite powered by Jest and Supertest.
 
+```bash
 # Run backend tests
 npm test
+```
 
 ---
 
 ## 📄 License
 
-This project is licensed under the ISC License.
+This project is licensed under the [ISC License](LICENSE).
