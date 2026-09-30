@@ -146,7 +146,7 @@ export default function WalletsPage() {
               </div>
               
               <div className="mt-auto pt-4 border-t border-slate-700/50 flex items-center justify-between text-xs text-slate-500">
-                <span>Created {formatRelativeTime(wallet.createdAt)}</span>
+                <span>Created {formatRelativeTime(wallet.created_at || wallet.createdAt)}</span>
               </div>
             </Card>
           ))}

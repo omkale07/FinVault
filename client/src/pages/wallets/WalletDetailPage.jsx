@@ -151,8 +151,8 @@ export default function WalletDetailPage() {
         </div>
         
         <div className="mt-8 pt-6 border-t border-slate-700/50 flex flex-wrap gap-x-8 gap-y-2 text-sm text-slate-400">
-          <p>Created: <span className="text-slate-300">{formatRelativeTime(wallet.createdAt)}</span></p>
-          <p>Last Updated: <span className="text-slate-300">{formatRelativeTime(wallet.updatedAt)}</span></p>
+          <p>Created: <span className="text-slate-300">{formatRelativeTime(wallet.created_at || wallet.createdAt)}</span></p>
+          <p>Last Updated: <span className="text-slate-300">{formatRelativeTime(wallet.updated_at || wallet.updatedAt)}</span></p>
         </div>
       </div>
 
@@ -183,7 +183,7 @@ export default function WalletDetailPage() {
                   {transactions.map(tx => (
                     <tr key={tx.id} className="hover:bg-slate-800/50 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap text-slate-400">
-                        {new Date(tx.createdAt).toLocaleDateString()} {new Date(tx.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        {new Date(tx.created_at || tx.createdAt).toLocaleDateString()} {new Date(tx.created_at || tx.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                       </td>
                       <td className="px-6 py-4 capitalize font-medium text-white">
                         <div className="flex items-center gap-2">

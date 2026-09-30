@@ -155,7 +155,7 @@ export default function NotificationsPage() {
                         </p>
                       </div>
                       <span className="text-xs text-slate-500 whitespace-nowrap">
-                        {formatRelativeTime(notification.createdAt)}
+                        {formatRelativeTime(notification.created_at || notification.createdAt)}
                       </span>
                     </div>
                   </div>
